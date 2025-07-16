@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_app/shared/theme/app_theme.dart';
 
 class AppThemeCubit extends Cubit<ThemeData> {
-  AppThemeCubit() : super(AppTheme.lightTheme);
+  AppThemeCubit() : super(AppTheme.darkTheme);
 
   void toggleTheme() {
     emit(state == AppTheme.lightTheme

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chat_app/features/home/presentation/landing_page.dart';
+import 'package:flutter_chat_app/core/navigation/app_router.dart';
 import 'package:flutter_chat_app/shared/theme/app_theme_cubit.dart';
 
 class App extends StatelessWidget {
@@ -14,9 +14,10 @@ class App extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          return MaterialApp(
+          return MaterialApp.router(
+            routerConfig: AppRouter().router,
+            debugShowCheckedModeBanner: false,
             theme: context.watch<AppThemeCubit>().state,
-            home: const LandingPage(),
           );
         },
       ),

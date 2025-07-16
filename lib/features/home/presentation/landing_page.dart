@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/core/navigation/app_router.dart';
+import 'package:flutter_chat_app/features/auth/routes.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -50,16 +52,13 @@ class LandingPage extends StatelessWidget {
 
   Widget _buildLoginButton(ThemeData theme) {
     return ElevatedButton(
-      onPressed: () {
-        // TODO: Navigate to login page
-      },
+      onPressed: _navigateToLogin,
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
         textStyle: theme.textTheme.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
         ),
-        minimumSize: const Size.fromHeight(56),
       ),
       child: const Text(
         'Log In',
@@ -78,11 +77,14 @@ class LandingPage extends StatelessWidget {
         textStyle: theme.textTheme.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
         ),
-        minimumSize: const Size.fromHeight(56),
       ),
       child: const Text(
         'Register',
       ),
     );
+  }
+
+  void _navigateToLogin() {
+    AppRouter().navigateToLogin();
   }
 }
