@@ -1,0 +1,6 @@
+fragment chatMember on ChatMember {
+  id
+  userId
+  username
+  role
+}

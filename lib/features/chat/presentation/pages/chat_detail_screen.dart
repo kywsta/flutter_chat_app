@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_app/core/auth/auth_session.dart';
+import 'package:flutter_chat_app/features/chat/domain/graphql/chat_member_fragment.graphql.dart';
 import 'package:flutter_chat_app/features/chat/domain/graphql/get_chats.graphql.dart';
 import 'package:flutter_chat_app/features/chat/domain/graphql/message_fragment.graphql.dart';
 import 'package:flutter_chat_app/features/chat/presentation/bloc/chat_detail_bloc.dart';
@@ -102,12 +103,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
             final messages =
                 context.select((ChatDetailBloc bloc) => bloc.state.messages);
+            final members = context
+                .select((SelectedChatCubit cubit) => cubit.state!.members);
             final hasReachedMax = context
                 .select((ChatDetailBloc bloc) => bloc.state.hasReachedMax);
 
             return (messages.isEmpty)
                 ? _buildEmptyMessagesView()
-                : _buildMessagesList(messages, hasReachedMax);
+                : _buildMessagesList(messages, members, hasReachedMax);
           }),
         ),
         _buildTypingIndicator(),
@@ -129,8 +132,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     ));
   }
 
-  Widget _buildMessagesList(
-      List<Fragment$message> messages, bool hasReachedMax) {
+  Widget _buildMessagesList(List<Fragment$message> messages,
+      List<Fragment$chatMember> members, bool hasReachedMax) {
     return ListView.builder(
       controller: _scrollController,
       itemCount: hasReachedMax ? messages.length : messages.length + 1,
@@ -138,7 +141,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       itemBuilder: (context, index) {
         if (index < messages.length) {
           final message = messages[index];
-          return _buildMessageBubble(message);
+          final member =
+              members.firstWhere((element) => element.userId == message.userId);
+          return _buildMessageBubble(message, member);
         } else {
           return _buildLoadingMoreIndicator();
         }
@@ -146,53 +151,94 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     );
   }
 
-  Widget _buildMessageBubble(Fragment$message message) {
-    final theme = Theme.of(context);
-
+  Widget _buildMessageBubble(
+      Fragment$message message, Fragment$chatMember member) {
     final currentUserId = AuthSession().userId;
     final isMyMessage = message.userId == currentUserId;
     final content = message.content;
     final createdAt = message.createdAt;
 
+    final sender = isMyMessage ? 'You' : member.username;
+    final senderAvatar = member.username.substring(0, 1).toUpperCase();
+
     return Align(
       alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
-        decoration: BoxDecoration(
-          color: isMyMessage
-              ? theme.colorScheme.secondaryContainer
-              : theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              content,
-              style: TextStyle(
-                color: isMyMessage
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onSurface,
-                fontSize: 16,
-              ),
+      child: Row(
+        mainAxisAlignment:
+            isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isMyMessage) _buildSenderAvatar(senderAvatar),
+          _buildMessageContent(isMyMessage, sender, content, createdAt),
+          if (isMyMessage) _buildSenderAvatar(senderAvatar),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildMessageContent(
+      bool isMyMessage, String sender, String content, DateTime createdAt) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment:
+            isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Text(sender.toUpperCase(),
+                style: theme.textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.75,
             ),
-            const SizedBox(height: 4),
-            Text(
-              DateTimeUtils.formatMessageTime(createdAt),
-              style: TextStyle(
-                color: isMyMessage
-                    ? theme.colorScheme.onSecondaryContainer
-                    : theme.colorScheme.onSurface,
-                fontSize: 12,
-              ),
+            decoration: BoxDecoration(
+              color: isMyMessage
+                  ? theme.colorScheme.secondaryContainer
+                  : theme.colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
             ),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  content,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    color: isMyMessage
+                        ? theme.colorScheme.onSecondaryContainer
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  DateTimeUtils.formatMessageTime(createdAt),
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    color: isMyMessage
+                        ? theme.colorScheme.onSecondaryContainer
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSenderAvatar(String senderAvatar) {
+    return Container(
+      margin: const EdgeInsets.only(left: 8, right: 8, top: 30),
+      child: CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: Text(senderAvatar),
       ),
     );
   }

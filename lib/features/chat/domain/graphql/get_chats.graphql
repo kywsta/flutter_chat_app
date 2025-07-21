@@ -9,6 +9,9 @@ query GetChats($first: Int, $after: String) {
         isGroup
         createdAt
         updatedAt
+        members {
+          ...chatMember
+        }
       }
     }
     pageInfo {

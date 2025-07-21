@@ -499,6 +499,39 @@ class _CopyWithStubImpl$Input$AddMemberInput<TRes>
       _res;
 }
 
+enum Enum$ChatMemberRole {
+  ADMIN,
+  MEMBER,
+  $unknown;
+
+  factory Enum$ChatMemberRole.fromJson(String value) =>
+      fromJson$Enum$ChatMemberRole(value);
+
+  String toJson() => toJson$Enum$ChatMemberRole(this);
+}
+
+String toJson$Enum$ChatMemberRole(Enum$ChatMemberRole e) {
+  switch (e) {
+    case Enum$ChatMemberRole.ADMIN:
+      return r'ADMIN';
+    case Enum$ChatMemberRole.MEMBER:
+      return r'MEMBER';
+    case Enum$ChatMemberRole.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$ChatMemberRole fromJson$Enum$ChatMemberRole(String value) {
+  switch (value) {
+    case r'ADMIN':
+      return Enum$ChatMemberRole.ADMIN;
+    case r'MEMBER':
+      return Enum$ChatMemberRole.MEMBER;
+    default:
+      return Enum$ChatMemberRole.$unknown;
+  }
+}
+
 enum Enum$MessageType {
   TEXT,
   IMAGE,
@@ -539,39 +572,6 @@ Enum$MessageType fromJson$Enum$MessageType(String value) {
       return Enum$MessageType.SYSTEM;
     default:
       return Enum$MessageType.$unknown;
-  }
-}
-
-enum Enum$ChatMemberRole {
-  ADMIN,
-  MEMBER,
-  $unknown;
-
-  factory Enum$ChatMemberRole.fromJson(String value) =>
-      fromJson$Enum$ChatMemberRole(value);
-
-  String toJson() => toJson$Enum$ChatMemberRole(this);
-}
-
-String toJson$Enum$ChatMemberRole(Enum$ChatMemberRole e) {
-  switch (e) {
-    case Enum$ChatMemberRole.ADMIN:
-      return r'ADMIN';
-    case Enum$ChatMemberRole.MEMBER:
-      return r'MEMBER';
-    case Enum$ChatMemberRole.$unknown:
-      return r'$unknown';
-  }
-}
-
-Enum$ChatMemberRole fromJson$Enum$ChatMemberRole(String value) {
-  switch (value) {
-    case r'ADMIN':
-      return Enum$ChatMemberRole.ADMIN;
-    case r'MEMBER':
-      return Enum$ChatMemberRole.MEMBER;
-    default:
-      return Enum$ChatMemberRole.$unknown;
   }
 }
 

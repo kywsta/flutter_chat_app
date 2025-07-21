@@ -6,5 +6,8 @@ query GetChat($chatId: String!) {
     lastMessageId
     id
     updatedAt
+    members {
+      ...chatMember
+    }
   }
 }

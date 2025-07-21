@@ -1,3 +1,4 @@
+import 'chat_member_fragment.graphql.dart';
 import 'dart:async';
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart' as graphql;
@@ -305,6 +306,25 @@ const documentNodeQueryGetChat = DocumentNode(definitions: [
             selectionSet: null,
           ),
           FieldNode(
+            name: NameNode(value: 'members'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                name: NameNode(value: 'chatMember'),
+                directives: [],
+              ),
+              FieldNode(
+                name: NameNode(value: '__typename'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null,
+              ),
+            ]),
+          ),
+          FieldNode(
             name: NameNode(value: '__typename'),
             alias: null,
             arguments: [],
@@ -322,6 +342,7 @@ const documentNodeQueryGetChat = DocumentNode(definitions: [
       ),
     ]),
   ),
+  fragmentDefinitionchatMember,
 ]);
 Query$GetChat _parserFn$Query$GetChat(Map<String, dynamic> data) =>
     Query$GetChat.fromJson(data);
@@ -461,6 +482,7 @@ class Query$GetChat$getChat {
     this.lastMessageId,
     required this.id,
     required this.updatedAt,
+    required this.members,
     this.$__typename = 'Chat',
   });
 
@@ -471,6 +493,7 @@ class Query$GetChat$getChat {
     final l$lastMessageId = json['lastMessageId'];
     final l$id = json['id'];
     final l$updatedAt = json['updatedAt'];
+    final l$members = json['members'];
     final l$$__typename = json['__typename'];
     return Query$GetChat$getChat(
       name: (l$name as String),
@@ -480,6 +503,9 @@ class Query$GetChat$getChat {
       lastMessageId: (l$lastMessageId as String?),
       id: (l$id as String),
       updatedAt: DateTime.parse((l$updatedAt as String)),
+      members: (l$members as List<dynamic>)
+          .map((e) => Fragment$chatMember.fromJson((e as Map<String, dynamic>)))
+          .toList(),
       $__typename: (l$$__typename as String),
     );
   }
@@ -495,6 +521,8 @@ class Query$GetChat$getChat {
   final String id;
 
   final DateTime updatedAt;
+
+  final List<Fragment$chatMember> members;
 
   final String $__typename;
 
@@ -512,6 +540,8 @@ class Query$GetChat$getChat {
     _resultData['id'] = l$id;
     final l$updatedAt = updatedAt;
     _resultData['updatedAt'] = l$updatedAt.toIso8601String();
+    final l$members = members;
+    _resultData['members'] = l$members.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -525,6 +555,7 @@ class Query$GetChat$getChat {
     final l$lastMessageId = lastMessageId;
     final l$id = id;
     final l$updatedAt = updatedAt;
+    final l$members = members;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$name,
@@ -533,6 +564,7 @@ class Query$GetChat$getChat {
       l$lastMessageId,
       l$id,
       l$updatedAt,
+      Object.hashAll(l$members.map((v) => v)),
       l$$__typename,
     ]);
   }
@@ -582,6 +614,18 @@ class Query$GetChat$getChat {
     if (l$updatedAt != lOther$updatedAt) {
       return false;
     }
+    final l$members = members;
+    final lOther$members = other.members;
+    if (l$members.length != lOther$members.length) {
+      return false;
+    }
+    for (int i = 0; i < l$members.length; i++) {
+      final l$members$entry = l$members[i];
+      final lOther$members$entry = lOther$members[i];
+      if (l$members$entry != lOther$members$entry) {
+        return false;
+      }
+    }
     final l$$__typename = $__typename;
     final lOther$$__typename = other.$__typename;
     if (l$$__typename != lOther$$__typename) {
@@ -615,8 +659,13 @@ abstract class CopyWith$Query$GetChat$getChat<TRes> {
     String? lastMessageId,
     String? id,
     DateTime? updatedAt,
+    List<Fragment$chatMember>? members,
     String? $__typename,
   });
+  TRes members(
+      Iterable<Fragment$chatMember> Function(
+              Iterable<CopyWith$Fragment$chatMember<Fragment$chatMember>>)
+          _fn);
 }
 
 class _CopyWithImpl$Query$GetChat$getChat<TRes>
@@ -639,6 +688,7 @@ class _CopyWithImpl$Query$GetChat$getChat<TRes>
     Object? lastMessageId = _undefined,
     Object? id = _undefined,
     Object? updatedAt = _undefined,
+    Object? members = _undefined,
     Object? $__typename = _undefined,
   }) =>
       _then(Query$GetChat$getChat(
@@ -658,10 +708,24 @@ class _CopyWithImpl$Query$GetChat$getChat<TRes>
         updatedAt: updatedAt == _undefined || updatedAt == null
             ? _instance.updatedAt
             : (updatedAt as DateTime),
+        members: members == _undefined || members == null
+            ? _instance.members
+            : (members as List<Fragment$chatMember>),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
+
+  TRes members(
+          Iterable<Fragment$chatMember> Function(
+                  Iterable<CopyWith$Fragment$chatMember<Fragment$chatMember>>)
+              _fn) =>
+      call(
+          members:
+              _fn(_instance.members.map((e) => CopyWith$Fragment$chatMember(
+                    e,
+                    (i) => i,
+                  ))).toList());
 }
 
 class _CopyWithStubImpl$Query$GetChat$getChat<TRes>
@@ -677,7 +741,10 @@ class _CopyWithStubImpl$Query$GetChat$getChat<TRes>
     String? lastMessageId,
     String? id,
     DateTime? updatedAt,
+    List<Fragment$chatMember>? members,
     String? $__typename,
   }) =>
       _res;
+
+  members(_fn) => _res;
 }

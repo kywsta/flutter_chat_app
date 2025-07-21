@@ -17,10 +17,27 @@ type Chat {
   name: String!
   creatorId: String!
   memberIds: [String!]!
+  members: [ChatMember!]!
   isGroup: Boolean!
   lastMessageId: String
   createdAt: DateTimeISO!
   updatedAt: DateTimeISO!
+}
+
+type ChatMember {
+  id: ID!
+  chatId: String!
+  userId: String!
+  username: String!
+  role: ChatMemberRole!
+  joinedAt: DateTimeISO!
+  isActive: Boolean!
+}
+
+"""The role of a user in a chat"""
+enum ChatMemberRole {
+  ADMIN
+  MEMBER
 }
 
 """
@@ -74,21 +91,6 @@ enum MessageType {
   IMAGE
   FILE
   SYSTEM
-}
-
-type ChatMember {
-  id: ID!
-  chatId: String!
-  userId: String!
-  role: ChatMemberRole!
-  joinedAt: DateTimeISO!
-  isActive: Boolean!
-}
-
-"""The role of a user in a chat"""
-enum ChatMemberRole {
-  ADMIN
-  MEMBER
 }
 
 type User {
