@@ -7,6 +7,7 @@ import 'package:flutter_chat_app/core/navigation/app_router.dart';
 import 'package:flutter_chat_app/features/chat/domain/graphql/get_chats.graphql.dart';
 import 'package:flutter_chat_app/features/chat/presentation/bloc/chat_list_bloc.dart';
 import 'package:flutter_chat_app/features/chat/routes.dart';
+import 'package:flutter_chat_app/shared/theme/app_theme_cubit.dart';
 
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
@@ -44,9 +45,17 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return AppBar(
       title: const Text('Chats'),
       actions: [
+        _buildThemeToggleButton(),
         _buildUserInfoButton(),
         _buildLogOutButton(),
       ],
+    );
+  }
+
+  Widget _buildThemeToggleButton() {
+    return IconButton(
+      onPressed: () => context.read<AppThemeCubit>().toggleTheme(),
+      icon: const Icon(Icons.brightness_6),
     );
   }
 

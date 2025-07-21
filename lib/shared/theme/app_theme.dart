@@ -10,15 +10,21 @@ class AppTheme {
   static ThemeData darkTheme = _buildDarkTheme();
 
   static ThemeData _buildLightTheme() {
-    return _buildTheme(ThemeData.light(useMaterial3: true));
+    return _buildTheme(ThemeData.light(useMaterial3: true), Brightness.light);
   }
 
   static ThemeData _buildDarkTheme() {
-    return _buildTheme(ThemeData.dark(useMaterial3: true));
+    return _buildTheme(ThemeData.dark(useMaterial3: true), Brightness.dark);
   }
 
-  static ThemeData _buildTheme(ThemeData base) {
+  static ThemeData _buildTheme(ThemeData base, Brightness brightness) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.blueGrey,
+      brightness: brightness,
+    );
+
     return base.copyWith(
+      colorScheme: colorScheme,
       actionIconTheme: ActionIconThemeData(
         backButtonIconBuilder: (BuildContext context) => Icon(Icons.arrow_back),
       ),
@@ -34,6 +40,11 @@ class AppTheme {
           ),
           minimumSize: const Size(double.infinity, _buttonHeight),
         ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: colorScheme.surfaceContainer,
+        selectedItemColor: colorScheme.primary,
+        unselectedItemColor: colorScheme.onSurface,
       ),
     );
   }

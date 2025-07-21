@@ -140,17 +140,20 @@ class _LoginPageState extends State<LoginPage> {
       final isLoading =
           context.select((LoginBloc bloc) => bloc.state is LoginLoading);
 
+      final theme = Theme.of(context);
+
       return SizedBox(
         width: double.infinity,
-        height: 48,
         child: ElevatedButton(
           onPressed: isLoading ? null : _login,
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 16),
-                ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.colorScheme.primary,
+            foregroundColor: theme.colorScheme.onPrimary,
+            textStyle: theme.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          child: isLoading ? const CircularProgressIndicator() : Text('Log In'),
         ),
       );
     });
