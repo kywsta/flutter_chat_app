@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/core/navigation/app_router.dart';
-import 'package:flutter_chat_app/features/home/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_app/features/auth/presentation/bloc/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,12 +23,32 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _buildLoginForm(),
-      ),
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is LoginFail) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.failure.interpretation.message),
+            ),
+          );
+          return;
+        }
+      },
+      child: Builder(builder: (context) {
+        final isLoading =
+            context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+
+        return PopScope(
+          canPop: !isLoading,
+          child: Scaffold(
+            appBar: _buildAppBar(),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildLoginForm(),
+            ),
+          ),
+        );
+      }),
     );
   }
 
@@ -65,16 +85,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildInputFields() {
-    return Column(
-      children: [
-        _buildUserNameInput(),
-        const SizedBox(height: 16),
-        _buildPasswordInput()
-      ],
-    );
+    return Builder(builder: (context) {
+      final isLoading =
+          context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+
+      return Column(
+        children: [
+          _buildUserNameInput(isLoading),
+          const SizedBox(height: 16),
+          _buildPasswordInput(isLoading)
+        ],
+      );
+    });
   }
 
-  Widget _buildUserNameInput() {
+  Widget _buildUserNameInput(bool isLoading) {
     return TextFormField(
       controller: _usernameController,
       decoration: const InputDecoration(
@@ -87,10 +112,11 @@ class _LoginPageState extends State<LoginPage> {
         }
         return null;
       },
+      enabled: !isLoading,
     );
   }
 
-  Widget _buildPasswordInput() {
+  Widget _buildPasswordInput(bool isLoading) {
     return TextFormField(
       controller: _passwordController,
       decoration: const InputDecoration(
@@ -105,21 +131,29 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       },
       onFieldSubmitted: (_) => _login(),
+      enabled: !isLoading,
     );
   }
 
   Widget _buildLoginButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        onPressed: _login,
-        child: const Text(
-          'Login',
-          style: TextStyle(fontSize: 16),
+    return Builder(builder: (context) {
+      final isLoading =
+          context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+
+      return SizedBox(
+        width: double.infinity,
+        height: 48,
+        child: ElevatedButton(
+          onPressed: isLoading ? null : _login,
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : const Text(
+                  'Login',
+                  style: TextStyle(fontSize: 16),
+                ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   void _login() {
@@ -127,6 +161,9 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    AppRouter().navigateToChats();
+    context.read<LoginBloc>().add(LoginRequested(
+          userName: _usernameController.text,
+          password: _passwordController.text,
+        ));
   }
 }

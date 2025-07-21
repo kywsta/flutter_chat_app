@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/app.dart';
+import 'package:flutter_chat_app/core/di/service_injector.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
 
-  runApp(const MainApp());
-}
+  initServiceLocator();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const App();
-  }
+  runApp(const App());
 }

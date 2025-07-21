@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/core/di/service_locator.dart';
 import 'package:flutter_chat_app/core/navigation/app_router.dart';
 import 'package:flutter_chat_app/features/auth/routes.dart';
 
@@ -68,9 +69,7 @@ class LandingPage extends StatelessWidget {
 
   Widget _buildRegisterButton(ThemeData theme) {
     return ElevatedButton(
-      onPressed: () {
-        // TODO: Navigate to register page
-      },
+      onPressed: _navigateToRegister,
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.secondaryContainer,
         foregroundColor: theme.colorScheme.onSecondaryContainer,
@@ -85,6 +84,14 @@ class LandingPage extends StatelessWidget {
   }
 
   void _navigateToLogin() {
-    AppRouter().navigateToLogin();
+    serviceLocator.get<AppRouter>().navigateToLogin();
+  }
+
+  void _navigateToRegister() {
+    ScaffoldMessenger.of(AppNavigatorKey.context).showSnackBar(
+      const SnackBar(
+        content: Text('New user registration is not available yet'),
+      ),
+    );
   }
 }

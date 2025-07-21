@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
+import 'package:flutter_chat_app/core/navigation/router_refresh_listenable.dart';
 import 'package:flutter_chat_app/features/auth/routes.dart';
 import 'package:flutter_chat_app/features/home/routes.dart';
 import 'package:go_router/go_router.dart';
@@ -11,17 +13,34 @@ class AppNavigatorKey {
 }
 
 class AppRouter {
-  static final AppRouter _instance = AppRouter._();
+  final GoRouter router;
 
-  AppRouter._();
+  AppRouter(AuthBloc authBloc)
+      : router = GoRouter(
+          navigatorKey: AppNavigatorKey.navigatorKey,
+          routes: [
+            ...AuthRoutes.routes,
+            ...HomeRoutes.routes,
+          ],
+          redirect: (context, state) {
+            debugPrint("Current path: ${state.fullPath}");
+            final authState = authBloc.state;
+            final isAuthenticated = authState is Authenticated;
 
-  factory AppRouter() => _instance;
+            if (!isAuthenticated &&
+                (state.fullPath != HomeRoutes.landing &&
+                    state.fullPath != AuthRoutes.login)) {
+              debugPrint("Not authenticated, redirecting to landing");
+              return HomeRoutes.landing;
+            }
 
-  final router = GoRouter(
-    navigatorKey: AppNavigatorKey.navigatorKey,
-    routes: [
-      ...HomeRoutes.routes,
-      ...AuthRoutes.routes,
-    ],
-  );
+            if (state.topRoute?.path == AuthRoutes.login && isAuthenticated) {
+              debugPrint("Login success, redirecting to chats");
+              return HomeRoutes.chats;
+            }
+
+            return null;
+          },
+          refreshListenable: RouterRefreshListenable(authBloc.stream),
+        );
 }

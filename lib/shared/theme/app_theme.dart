@@ -19,6 +19,9 @@ class AppTheme {
 
   static ThemeData _buildTheme(ThemeData base) {
     return base.copyWith(
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (BuildContext context) => Icon(Icons.arrow_back),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: _borderRadius,
