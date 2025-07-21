@@ -1,0 +1,10 @@
+query GetChat($chatId: String!) {
+  getChat(chatId: $chatId) {
+    name
+    memberIds
+    isGroup
+    lastMessageId
+    id
+    updatedAt
+  }
+}

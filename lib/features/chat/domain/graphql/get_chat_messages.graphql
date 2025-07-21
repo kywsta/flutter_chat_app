@@ -1,0 +1,17 @@
+query GetChatMessages($chatId: String!, $before: String, $last: Int) {
+  getChatMessages(chatId: $chatId, before: $before, last: $last) {
+    edges {
+      cursor
+      node {
+        ...message
+      }
+    }
+    pageInfo {
+      hasPreviousPage
+      startCursor
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}

@@ -1,0 +1,3 @@
+mutation SetTypingStatus($chatId: String!, $isTyping: Boolean!) {
+  setTypingStatus(chatId: $chatId, isTyping: $isTyping)
+}

@@ -1,0 +1,22 @@
+query GetChats($first: Int, $after: String) {
+  getChats(first: $first, after: $after) {
+    edges {
+      cursor
+      node {
+        id
+        name
+        memberIds
+        isGroup
+        createdAt
+        updatedAt
+      }
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}

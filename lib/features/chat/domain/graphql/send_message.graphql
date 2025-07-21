@@ -1,0 +1,6 @@
+mutation SendMessage($sendMessageInput: SendMessageInput!) {
+  sendMessage(input: $sendMessageInput) {
+    id
+    createdAt
+  }
+}

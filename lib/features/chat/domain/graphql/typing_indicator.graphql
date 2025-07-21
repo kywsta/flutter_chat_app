@@ -1,0 +1,8 @@
+subscription TypingIndicator($chatId: String!) {
+  typingIndicator(chatId: $chatId) {
+    chatId
+    isTyping
+    userId
+    userName
+  }
+}
