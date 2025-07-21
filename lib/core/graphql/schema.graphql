@@ -1,0 +1,138 @@
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+type Query {
+  getChat(chatId: String!): Chat
+  getChats(first: Int, after: String, last: Int, before: String, searchTerm: String, isGroup: Boolean): ChatConnection!
+  getChatMessages(first: Int, after: String, last: Int, before: String, chatId: String!, messageType: String): MessageConnection!
+  getChatMembers(chatId: String!): [ChatMember!]!
+  me: User
+  hello: String!
+}
+
+type Chat {
+  id: ID!
+  name: String!
+  creatorId: String!
+  memberIds: [String!]!
+  isGroup: Boolean!
+  lastMessageId: String
+  createdAt: DateTimeISO!
+  updatedAt: DateTimeISO!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
+"""
+scalar DateTimeISO
+
+type ChatConnection {
+  edges: [ChatEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type ChatEdge {
+  node: Chat!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type MessageConnection {
+  edges: [MessageEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type MessageEdge {
+  node: Message!
+  cursor: String!
+}
+
+type Message {
+  id: ID!
+  chatId: String!
+  userId: String!
+  content: String!
+  type: MessageType!
+  replyToId: String
+  createdAt: DateTimeISO!
+  updatedAt: DateTimeISO
+}
+
+"""The type of message content"""
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+type ChatMember {
+  id: ID!
+  chatId: String!
+  userId: String!
+  role: ChatMemberRole!
+  joinedAt: DateTimeISO!
+  isActive: Boolean!
+}
+
+"""The role of a user in a chat"""
+enum ChatMemberRole {
+  ADMIN
+  MEMBER
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String
+  createdAt: DateTimeISO!
+  isActive: Boolean!
+}
+
+type Mutation {
+  createChat(input: CreateChatInput!): Chat!
+  sendMessage(input: SendMessageInput!): Message!
+  addChatMember(input: AddMemberInput!): ChatMember!
+  setTypingStatus(isTyping: Boolean!, chatId: String!): Boolean!
+}
+
+input CreateChatInput {
+  name: String!
+  memberIds: [String!]!
+  isGroup: Boolean! = true
+}
+
+input SendMessageInput {
+  chatId: String!
+  content: String!
+  type: MessageType! = TEXT
+  replyToId: String
+}
+
+input AddMemberInput {
+  chatId: String!
+  userId: String!
+  role: ChatMemberRole! = MEMBER
+}
+
+type Subscription {
+  messageAdded(chatId: String!): Message!
+  typingIndicator(chatId: String!): TypingIndicator!
+}
+
+type TypingIndicator {
+  chatId: String!
+  userId: String!
+  userName: String!
+  isTyping: Boolean!
+}

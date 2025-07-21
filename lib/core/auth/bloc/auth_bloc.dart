@@ -20,12 +20,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutEvent);
   }
 
-  @override
-  void onEvent(AuthEvent event) {
-    print('AuthBloc onEvent: $event');
-    super.onEvent(event);
-  }
-
   Future<void> _onAuthSubscriptionRequested(
       AuthSubscriptionRequested event, Emitter<AuthState> emit) async {
     return emit.onEach(
