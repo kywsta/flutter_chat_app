@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/navigation/app_router.dart';
+import 'package:flutter_chat_app/features/chat/routes.dart';
 import 'package:flutter_chat_app/features/home/presentation/home_page.dart';
 import 'package:flutter_chat_app/features/home/presentation/landing_page.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +11,7 @@ final _settingsNavigatorKey = GlobalKey<NavigatorState>();
 
 class HomeRoutes {
   static const landing = '/';
-  static const chats = '/chats';
+  static const home = ChatRoutes.chats;
   static const profile = '/profile';
   static const settings = '/settings';
 
@@ -27,10 +28,7 @@ class HomeRoutes {
         StatefulShellBranch(
           navigatorKey: _chatsNavigatorKey,
           routes: [
-            GoRoute(
-              path: chats,
-              builder: (context, state) => const ChildPage(pageName: 'Chats'),
-            ),
+            ...ChatRoutes.routes,
           ],
         ),
         StatefulShellBranch(
@@ -55,10 +53,4 @@ class HomeRoutes {
       ],
     )
   ];
-}
-
-extension HomeRoutesExtension on AppRouter {
-  void navigateToChats() {
-    router.go(HomeRoutes.chats);
-  }
 }

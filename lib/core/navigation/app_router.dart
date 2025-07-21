@@ -35,8 +35,8 @@ class AppRouter {
             }
 
             if (state.topRoute?.path == AuthRoutes.login && isAuthenticated) {
-              debugPrint("Login success, redirecting to chats");
-              return HomeRoutes.chats;
+              debugPrint("Login success, redirecting to home");
+              return HomeRoutes.home;
             }
 
             return null;
