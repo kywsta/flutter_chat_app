@@ -20,7 +20,7 @@ class ChatRoutes {
   static const String chats = '/chats';
   static const String chatDetail = '/chats/:chatId';
 
-  static final routes = [
+  static final shellRoutes = [
     GoRoute(
       path: chats,
       builder: (context, state) => BlocProvider(
@@ -30,6 +30,9 @@ class ChatRoutes {
         child: const ChatsScreen(),
       ),
     ),
+  ];
+
+  static final routes = [
     GoRoute(
       path: chatDetail,
       builder: (context, state) => BlocProvider(

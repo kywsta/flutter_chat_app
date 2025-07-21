@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 import 'package:flutter_chat_app/core/di/service_locator.dart';
 import 'package:flutter_chat_app/core/navigation/app_router.dart';
+import 'package:flutter_chat_app/features/chat/presentation/cubit/selected_chat_cubit.dart';
 import 'package:flutter_chat_app/shared/theme/app_theme_cubit.dart';
 
 class App extends StatelessWidget {
@@ -14,6 +15,7 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AppThemeCubit()),
         BlocProvider(create: (context) => serviceLocator.get<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator.get<SelectedChatCubit>()),
       ],
       child: Builder(
         builder: (context) {

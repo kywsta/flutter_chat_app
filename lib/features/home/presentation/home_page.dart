@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,17 +9,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(LogoutRequested());
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
       body: navigationShell,
       bottomNavigationBar: _buildNavigationBar(),
     );

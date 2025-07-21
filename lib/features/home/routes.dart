@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/core/navigation/app_router.dart';
 import 'package:flutter_chat_app/features/chat/routes.dart';
 import 'package:flutter_chat_app/features/home/presentation/home_page.dart';
 import 'package:flutter_chat_app/features/home/presentation/landing_page.dart';
@@ -28,7 +27,7 @@ class HomeRoutes {
         StatefulShellBranch(
           navigatorKey: _chatsNavigatorKey,
           routes: [
-            ...ChatRoutes.routes,
+            ...ChatRoutes.shellRoutes,
           ],
         ),
         StatefulShellBranch(

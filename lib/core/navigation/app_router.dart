@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 import 'package:flutter_chat_app/core/navigation/router_refresh_listenable.dart';
 import 'package:flutter_chat_app/features/auth/routes.dart';
+import 'package:flutter_chat_app/features/chat/routes.dart';
 import 'package:flutter_chat_app/features/home/routes.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,6 +22,7 @@ class AppRouter {
           routes: [
             ...AuthRoutes.routes,
             ...HomeRoutes.routes,
+            ...ChatRoutes.routes,
           ],
           redirect: (context, state) {
             debugPrint("Current path: ${state.fullPath}");
