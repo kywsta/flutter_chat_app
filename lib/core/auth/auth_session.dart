@@ -1,7 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_chat_app/core/auth/models/user_auth_model.dart';
+import 'package:flutter_chat_app/core/auth/repositories/auth_repository.dart';
+import 'package:flutter_chat_app/core/di/service_locator.dart';
 
-class AuthSession extends ChangeNotifier {
+class AuthSession {
   static final AuthSession _singleton = AuthSession._internal();
 
   factory AuthSession() {
@@ -10,27 +11,16 @@ class AuthSession extends ChangeNotifier {
 
   AuthSession._internal();
 
-  UserAuthModel? _userAuthModel;
+  UserAuthModel? get userAuthModel =>
+      serviceLocator.get<AuthRepository>().authState;
 
-  UserAuthModel? get userAuthModel => _userAuthModel;
+  bool get isAuthenticated => userAuthModel != null;
 
-  void setAuthSession(UserAuthModel userAuthModel) {
-    _userAuthModel = userAuthModel;
-    notifyListeners();
-  }
+  String? get authToken => userAuthModel?.token;
 
-  void clearAuthSession() {
-    _userAuthModel = null;
-    notifyListeners();
-  }
+  String? get userId => userAuthModel?.user.id;
 
-  bool get isAuthenticated => _userAuthModel != null;
+  String? get userName => userAuthModel?.user.username;
 
-  String? get authToken => _userAuthModel?.token;
-
-  String? get userId => _userAuthModel?.user.id;
-
-  String? get userName => _userAuthModel?.user.username;
-
-  String? get email => _userAuthModel?.user.email;
+  String? get email => userAuthModel?.user.email;
 }
