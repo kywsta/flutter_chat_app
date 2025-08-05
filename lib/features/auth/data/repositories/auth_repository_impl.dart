@@ -14,19 +14,12 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either<UserAuthModel, Failure>> login(
       String userName, String password) async {
-    final result =
-        await on(() async => await dataSource.login(userName, password));
-
-    result.fold(
-      (userAuth) => authState = userAuth,
-      (failure) => authState = null,
-    );
-
-    return result;
+    return await on(() async => await dataSource.login(userName, password));
   }
 
   @override
   Future<void> logout() async {
-    authState = null;
+    // Do something like clear the token from the local storage
+    return;
   }
 }

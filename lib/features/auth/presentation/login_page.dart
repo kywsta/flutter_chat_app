@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chat_app/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is LoginFail) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Builder(builder: (context) {
         final isLoading =
-            context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+            context.select((AuthBloc bloc) => bloc.state is LoginLoading);
 
         return PopScope(
           canPop: !isLoading,
@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildInputFields() {
     return Builder(builder: (context) {
       final isLoading =
-          context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+          context.select((AuthBloc bloc) => bloc.state is LoginLoading);
 
       return Column(
         children: [
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return Builder(builder: (context) {
       final isLoading =
-          context.select((LoginBloc bloc) => bloc.state is LoginLoading);
+          context.select((AuthBloc bloc) => bloc.state is LoginLoading);
 
       final theme = Theme.of(context);
 
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    context.read<LoginBloc>().add(LoginRequested(
+    context.read<AuthBloc>().add(LoginRequested(
           userName: _usernameController.text,
           password: _passwordController.text,
         ));

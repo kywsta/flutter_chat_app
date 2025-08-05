@@ -1,5 +1,5 @@
+import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 import 'package:flutter_chat_app/core/auth/models/user_auth_model.dart';
-import 'package:flutter_chat_app/core/auth/repositories/auth_repository.dart';
 import 'package:flutter_chat_app/core/di/service_locator.dart';
 
 class AuthSession {
@@ -11,8 +11,10 @@ class AuthSession {
 
   AuthSession._internal();
 
-  UserAuthModel? get userAuthModel =>
-      serviceLocator.get<AuthRepository>().authState;
+  UserAuthModel? get userAuthModel => (serviceLocator.get<AuthBloc>().state
+          is Authenticated)
+      ? (serviceLocator.get<AuthBloc>().state as Authenticated).userAuthModel
+      : null;
 
   bool get isAuthenticated => userAuthModel != null;
 

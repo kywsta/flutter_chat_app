@@ -9,6 +9,17 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {}
 
+class LoginLoading extends AuthState {}
+
+class LoginFail extends AuthState {
+  final Failure failure;
+
+  const LoginFail({required this.failure});
+
+  @override
+  List<Object> get props => [failure];
+}
+
 class Authenticated extends AuthState {
   final UserAuthModel userAuthModel;
 

@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_app/core/auth/bloc/auth_bloc.dart';
 import 'package:flutter_chat_app/core/auth/repositories/auth_repository.dart';
-import 'package:flutter_chat_app/core/auth/use_cases/get_auth_state_stream_use_case.dart';
 import 'package:flutter_chat_app/core/auth/use_cases/login_use_case.dart';
 import 'package:flutter_chat_app/core/auth/use_cases/logout_use_case.dart';
 import 'package:flutter_chat_app/core/di/service_locator.dart';
@@ -27,11 +26,6 @@ void injectAuthUseCases() {
     () => LoginUseCase(repository: serviceLocator<AuthRepository>()),
   );
 
-  serviceLocator.registerLazySingleton<GetAuthStateStreamUseCase>(
-    () =>
-        GetAuthStateStreamUseCase(repository: serviceLocator<AuthRepository>()),
-  );
-
   serviceLocator.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(repository: serviceLocator<AuthRepository>()),
   );
@@ -40,8 +34,8 @@ void injectAuthUseCases() {
 void injectAuthBlocs() {
   serviceLocator.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
-      getAuthStateStreamUseCase: serviceLocator<GetAuthStateStreamUseCase>(),
+      loginUseCase: serviceLocator<LoginUseCase>(),
       logoutUseCase: serviceLocator<LogoutUseCase>(),
-    )..add(AuthSubscriptionRequested()),
+    ),
   );
 }
