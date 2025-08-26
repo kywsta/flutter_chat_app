@@ -40,7 +40,12 @@ class DioExceptionFactory {
   static AppException fromBadResponse(DioException exception) {
     switch (exception.response?.statusCode) {
       case 400:
-        return fromBadRequest(exception);
+        return BadRequestException(
+          exception: exception,
+          stackTrace: exception.stackTrace,
+          message: exception.response?.data['message'] ??
+              exception.response?.data['error'],
+        );
       case 401:
         return UnauthorizedException(
             exception: exception, stackTrace: exception.stackTrace);
@@ -62,14 +67,5 @@ class DioExceptionFactory {
         return InternalServerErrorException(
             exception: exception, stackTrace: exception.stackTrace);
     }
-  }
-
-  static BadRequestException fromBadRequest(DioException exception) {
-    return BadRequestException(
-      exception: exception,
-      stackTrace: exception.stackTrace,
-      message: exception.response?.data['message'] ??
-          exception.response?.data['error'],
-    );
   }
 }
