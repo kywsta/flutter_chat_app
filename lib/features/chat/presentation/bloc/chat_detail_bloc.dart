@@ -33,6 +33,8 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
   StreamSubscription<Subscription$TypingIndicator>?
       _typingIndicatorSubscription;
 
+  Timer? _typingStatusTimer;
+
   ChatDetailBloc({
     required this.chat,
     required this.getChatMessagesUseCase,
@@ -46,6 +48,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     on<SetTypingStatus>(_onSetTypingStatus);
     on<MessageAdded>(_onMessageAdded);
     on<TypingIndicatorReceived>(_onTypingIndicatorReceived);
+    on<UpdateTypingUsers>(_onUpdateTypingUsers);
 
     _initSubscriptions();
   }
@@ -162,13 +165,18 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
             userId: userId, userName: userName, lastUpdate: DateTime.now()));
       }
 
-      Timer(const Duration(seconds: 3), () {
-        final lastUpdate =
-            typingUsers.firstWhereOrNull((e) => e.userId == userId)?.lastUpdate;
+      _typingStatusTimer?.cancel();
+      _typingStatusTimer = Timer(const Duration(seconds: 3), () {
+        final typingUsers  = state.typingUsers.toList();
+        final lastUpdate = typingUsers
+            .firstWhereOrNull((e) => e.userId == userId)
+            ?.lastUpdate;
         if (lastUpdate != null &&
             DateTime.now().difference(lastUpdate).inSeconds >= 3) {
           typingUsers.removeWhere((e) => e.userId == userId);
         }
+
+        add(UpdateTypingUsers(typingUsers: typingUsers));
       });
     } else {
       typingUsers.removeWhere((e) => e.userId == userId);
@@ -179,5 +187,9 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         typingUsers: typingUsers,
       ),
     );
+  }
+
+  FutureOr<void> _onUpdateTypingUsers(UpdateTypingUsers event, Emitter<ChatDetailState> emit) {
+    emit(state.copyWith(typingUsers: event.typingUsers));
   }
 }

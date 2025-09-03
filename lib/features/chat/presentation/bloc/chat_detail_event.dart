@@ -44,3 +44,12 @@ class TypingIndicatorReceived extends ChatDetailEvent {
   @override
   List<Object> get props => [typingIndicator];
 }
+
+class UpdateTypingUsers extends ChatDetailEvent {
+  final List<TypingUser> typingUsers;
+
+  const UpdateTypingUsers({required this.typingUsers});
+
+  @override
+  List<Object> get props => [typingUsers];
+}
