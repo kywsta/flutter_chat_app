@@ -9,8 +9,9 @@ abstract class Repository {
     try {
       return Left(await fn());
     } catch (e, s) {
-      final appException = AppExceptionFactory.fromException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(exception: appException, stack: appException.stackTrace));
+      final appException = AppExceptionFactory.identifyException(e, s);
+      FlutterError.presentError(FlutterErrorDetails(
+          exception: appException, stack: appException.stackTrace));
       return Right(Failure(exception: appException));
     }
   }
@@ -26,8 +27,9 @@ abstract class Repository {
 
       return Left(result.parsedData as T);
     } catch (e, s) {
-      final appException = AppExceptionFactory.fromException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(exception: appException, stack: appException.stackTrace));
+      final appException = AppExceptionFactory.identifyException(e, s);
+      FlutterError.presentError(FlutterErrorDetails(
+          exception: appException, stack: appException.stackTrace));
       return Right(Failure(exception: appException));
     }
   }
@@ -40,8 +42,9 @@ abstract class Repository {
 
       return result.parsedData as T;
     }).handleError((e, s) {
-      final appException = AppExceptionFactory.fromException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(exception: appException, stack: appException.stackTrace));
+      final appException = AppExceptionFactory.identifyException(e, s);
+      FlutterError.presentError(FlutterErrorDetails(
+          exception: appException, stack: appException.stackTrace));
     });
   }
 }

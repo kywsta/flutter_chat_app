@@ -8,47 +8,79 @@ abstract base class AppException {
   });
 }
 
-final class BadRequestException extends AppException {
+abstract base class HttpException extends AppException {
+  final String url;
+  HttpException({
+    required super.exception,
+    required super.stackTrace,
+  }) : url = exception.response?.realUri.toString() ?? '';
+}
+
+final class BadRequestException extends HttpException {
   final String? message;
+  final dynamic data;
+
   BadRequestException({
     required super.exception,
     required super.stackTrace,
     required this.message,
+    this.data,
   });
 }
 
-final class UnauthorizedException extends AppException {
-  UnauthorizedException({required super.exception, required super.stackTrace});
+final class UnauthorizedException extends HttpException {
+  UnauthorizedException({
+    required super.exception,
+    required super.stackTrace,
+  });
 }
 
-final class ForbiddenException extends AppException {
-  ForbiddenException({required super.exception, required super.stackTrace});
+final class ForbiddenException extends HttpException {
+  ForbiddenException({
+    required super.exception,
+    required super.stackTrace,
+  });
 }
 
-final class NotFoundException extends AppException {
-  NotFoundException({required super.exception, required super.stackTrace});
+final class NotFoundException extends HttpException {
+  NotFoundException({
+    required super.exception,
+    required super.stackTrace,
+  });
+}
+
+final class InternalServerErrorException extends HttpException {
+  InternalServerErrorException({
+    required super.exception,
+    required super.stackTrace,
+  });
+}
+
+final class ServiceUnavailableException extends HttpException {
+  final int? statusCode;
+  ServiceUnavailableException({
+    required super.exception,
+    required super.stackTrace,
+    required this.statusCode,
+  });
 }
 
 final class CancleTokenException extends AppException {
   CancleTokenException({required super.exception, required super.stackTrace});
 }
 
-final class InternalServerErrorException extends AppException {
-  InternalServerErrorException(
-      {required super.exception, required super.stackTrace});
-}
-
-final class ServiceUnavailableException extends AppException {
-  ServiceUnavailableException(
-      {required super.exception, required super.stackTrace});
-}
-
 final class NetworkException extends AppException {
   NetworkException({required super.exception, required super.stackTrace});
 }
 
-final class SystemException extends AppException {
-  SystemException({required super.exception, required super.stackTrace});
+final class OutOfMemoryErrorException extends AppException {
+  OutOfMemoryErrorException(
+      {required super.exception, required super.stackTrace});
+}
+
+final class StackOverflowErrorException extends AppException {
+  StackOverflowErrorException(
+      {required super.exception, required super.stackTrace});
 }
 
 final class ParseException extends AppException {
