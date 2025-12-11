@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_chat_app/core/error/error_reporter.dart';
 import 'package:flutter_chat_app/core/error/exception_factory.dart';
 import 'package:flutter_chat_app/core/error/failures.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -10,8 +10,7 @@ abstract class Repository {
       return Left(await fn());
     } catch (e, s) {
       final appException = AppExceptionFactory.identifyException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(
-          exception: appException, stack: appException.stackTrace));
+      ErrorReporter().reportException(appException);
       return Right(Failure(exception: appException));
     }
   }
@@ -28,8 +27,7 @@ abstract class Repository {
       return Left(result.parsedData as T);
     } catch (e, s) {
       final appException = AppExceptionFactory.identifyException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(
-          exception: appException, stack: appException.stackTrace));
+      ErrorReporter().reportException(appException);
       return Right(Failure(exception: appException));
     }
   }
@@ -43,8 +41,7 @@ abstract class Repository {
       return result.parsedData as T;
     }).handleError((e, s) {
       final appException = AppExceptionFactory.identifyException(e, s);
-      FlutterError.presentError(FlutterErrorDetails(
-          exception: appException, stack: appException.stackTrace));
+      ErrorReporter().reportException(appException);
     });
   }
 }

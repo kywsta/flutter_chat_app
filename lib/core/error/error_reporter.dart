@@ -11,19 +11,16 @@ class ErrorReporter {
 
   ErrorReporter._internal();
 
-  void reportError(AppException exception) {
-    if (!kDebugMode) {
-      _reportToCrashlytics(exception);
+  void reportException(dynamic exception, [StackTrace? stackTrace]) {
+    AppException appException;
+    if (exception is! AppException) {
+      appException = AppExceptionFactory.identifyException(
+        exception,
+        stackTrace,
+      );
     } else {
-      _logToConsole(exception);
+      appException = exception;
     }
-  }
-
-  void reportException(Object exception, [StackTrace? stackTrace]) {
-    final appException = AppExceptionFactory.identifyException(
-      exception,
-      stackTrace,
-    );
 
     if (!kDebugMode) {
       _reportToCrashlytics(appException);
