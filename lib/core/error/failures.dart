@@ -42,7 +42,7 @@ class FailureInterpretationHelper {
   FailureInterpretation fromBadRequest(BadRequestException exception) {
     return FailureInterpretation(
       title: "Error",
-      message: exception.message ?? "Sorry, something went wrong.",
+      message: "Sorry, something went wrong.",
     );
   }
 

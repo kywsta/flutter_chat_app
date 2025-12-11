@@ -62,8 +62,6 @@ class AppExceptionFactory {
     return BadRequestException(
       exception: exception,
       stackTrace: stackTrace,
-      message: exception.response?.data['message'] ??
-          exception.response?.data['error'],
     );
   }
 
