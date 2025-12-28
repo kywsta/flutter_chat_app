@@ -8,7 +8,8 @@ import 'package:flutter_chat_app/features/auth/auth_injections.dart';
 import 'package:flutter_chat_app/features/chat/chat_injections.dart';
 
 void initServiceLocator() {
-  serviceLocator.registerLazySingleton<Dio>(() => DioFactory().getDio());
+  final dio = DioFactory().getDio();
+  serviceLocator.registerLazySingleton<Dio>(() => dio);
 
   serviceLocator.registerLazySingleton<GraphQLService>(() => GraphQLService());
 

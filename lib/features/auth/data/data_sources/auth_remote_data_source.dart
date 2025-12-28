@@ -1,9 +1,13 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_app/core/auth/models/user_auth_model.dart';
 import 'package:flutter_chat_app/core/constants/network.dart';
+import 'package:flutter_chat_app/core/error/failures.dart';
+import 'package:flutter_chat_app/core/network/api_call_handler.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserAuthModel> login(String userName, String password);
+  Future<Either<UserAuthModel, Failure>> login(
+      String userName, String password);
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -12,14 +16,16 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<UserAuthModel> login(String userName, String password) async {
+  Future<Either<UserAuthModel, Failure>> login(
+      String userName, String password) async {
     final url = NetworkConstants.login;
 
-    final response = await dio.post(url, data: {
-      'username': userName,
-      'password': password,
+    return ApiCallHandler.on(() async {
+      final response = await dio.post(url, data: {
+        'username': userName,
+        'password': password,
+      });
+      return UserAuthModel.fromJson(response.data);
     });
-
-    return UserAuthModel.fromJson(response.data);
   }
 }

@@ -13,8 +13,8 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Either<UserAuthModel, Failure>> login(
-      String userName, String password) async {
-    return await on(() async => await dataSource.login(userName, password));
+      String userName, String password) {
+    return dataSource.login(userName, password);
   }
 
   @override
